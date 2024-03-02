@@ -1,4 +1,4 @@
-d3.csv("top10.csv").then(function(data) {
+d3.csv("data/cleaned/top10.csv").then(function(data) {
 
     // X axis: scale and draw:
     const x = d3.scaleLinear()
