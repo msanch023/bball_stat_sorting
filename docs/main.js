@@ -1,4 +1,4 @@
-// Set the dimensions and margins of the graph
+// Set the dimensions and margins of the graph reading from src
 const margin = {top: 20, right: 30, bottom: 40, left: 90},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
@@ -11,7 +11,7 @@ const svg = d3.select("#chart")
   .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-    
+
 d3.csv("top10.csv").then(function(data) {
 
     // X axis: scale and draw:
