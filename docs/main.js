@@ -25,8 +25,8 @@ d3.csv("data/cleaned/top10.csv").then(function(data) {
       .enter()
       .append("rect")
       .attr("x", x(0) )
-      .attr("y", d => y(d.name))
-      .attr("width", d => x(d.points))
+      .attr("y", d => y(d.player))
+      .attr("width", d => x(d.pts))
       .attr("height", y.bandwidth())
       .attr("class", "bar")
   });
@@ -34,15 +34,15 @@ d3.csv("data/cleaned/top10.csv").then(function(data) {
  //Button
   document.getElementById('sort').addEventListener('click', () => {
     // Sort the data by points
-    data.sort((a, b) => b.points - a.points);
+    data.sort((a, b) => b.pts - a.pts);
   
     // Update the Y axis domain with new order
-    y.domain(data.map(d => d.name));
+    y.domain(data.map(d => d.player));
   
     // Transition to new order
     svg.selectAll(".bar")
         .transition()
         .duration(1000)
-        .attr("y", d => y(d.name));
+        .attr("y", d => y(d.player));
   });
   
