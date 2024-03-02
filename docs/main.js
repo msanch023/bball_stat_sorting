@@ -1,4 +1,7 @@
 
+d3.csv("top10.csv").then(function(data) {
+
+  });
   
   
  //Button
