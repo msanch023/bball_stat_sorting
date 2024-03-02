@@ -2,7 +2,7 @@ d3.csv("data/cleaned/top10.csv").then(function(data) {
 
     // X axis: scale and draw:
     const x = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.points)])
+        .domain([0, d3.max(data, d => d.pts)])
         .range([0, width]);
     svg.append("g")
         .attr("transform", `translate(0,${height})`)
@@ -14,7 +14,7 @@ d3.csv("data/cleaned/top10.csv").then(function(data) {
     // Y axis: scale and draw:
     const y = d3.scaleBand()
         .range([0, height])
-        .domain(data.map(d => d.name))
+        .domain(data.map(d => d.player))
         .padding(.1);
     svg.append("g")
       .call(d3.axisLeft(y))
