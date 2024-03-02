@@ -1,3 +1,3 @@
 # bball_stat_sorting
 
-dataset source: https://www.kaggle.com/datasets/drgilermo/nba-players-stats
+dataset source: https://www.kaggle.com/datasets/sumitrodatta/nba-aba-baa-stats
