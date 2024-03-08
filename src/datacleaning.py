@@ -8,4 +8,6 @@ top10 = top10[top10['season'] == 2020].sort_values(by='pts', ascending=False)
 
 top10 = top10[:10]
 
+top10 = top10.astype({'trb': int})
+
 top10.to_csv("data/cleaned/top10.csv")

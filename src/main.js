@@ -9,39 +9,40 @@ const svg = d3.select("#chart")
   .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
+// Declare 'y' and 'data' outside to make them accessible in 'sortAndUpdate'
+let y = d3.scaleBand().range([0, height]).padding(.1);
+let data;
 
-d3.csv("top10.csv").then(function(data) {
-
-    const x = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.pts)])
-        .range([0, width]);
-    svg.append("g")
-        .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x))
-        .selectAll("text")
-          .attr("transform", "translate(-10,0)rotate(-45)")
-          .style("text-anchor", "end");
-  
-    const y = d3.scaleBand()
-        .range([0, height])
-        .domain(data.map(d => d.player))
-        .padding(.1);
-    svg.append("g")
-      .call(d3.axisLeft(y))
-  
-    svg.selectAll("myRect")
-      .data(data)
-      .enter()
-      .append("rect")
-      .attr("x", x(0) )
-      .attr("y", d => y(d.player))
-      .attr("width", d => x(d.pts))
-      .attr("height", y.bandwidth())
-      .attr("class", "bar")
+d3.csv("top10.csv").then(function(loadedData) {
+  data = loadedData; // Assign the loaded data to 'data'
+  data.forEach(d => {
+    d.pts = +d.pts;
+    d.ast = +d.ast;
+    d.reb = +d.trb;
   });
-  
-  
-// Existing D3 code to load data and create the initial bar chart
+
+  const x = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d.reb)])
+      .range([0, width]);
+      svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .attr("class", "x-axis") // Add this line to give your x-axis <g> element a class
+      .call(d3.axisBottom(x));
+
+  y.domain(data.map(d => d.player));
+
+  svg.append("g").call(d3.axisLeft(y));
+
+  svg.selectAll("myRect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", x(0))
+    .attr("y", d => y(d.player))
+    .attr("width", d => x(d.pts))
+    .attr("height", y.bandwidth())
+    .attr("class", "bar");
+});
 
 document.getElementById('sort-points').addEventListener('click', () => {
   sortAndUpdate("pts");
@@ -55,19 +56,40 @@ document.getElementById('sort-rebounds').addEventListener('click', () => {
   sortAndUpdate("reb");
 });
 
-// Function to sort data and update the chart
 function sortAndUpdate(stat) {
-  data.sort((a, b) => +b[stat] - +a[stat]); // Sort data based on the stat (pts, ast, reb)
+  console.log(`Sorting by ${stat}`);
 
-  // Update the y-domain based on the new data order
+  // Sort data
+  data.sort((a, b) => b[stat] - a[stat]);
+  
+  // Update y-domain based on sorted data
   y.domain(data.map(d => d.player));
+  
+  // Recalculate x-scale based on new stat's max value
+  const x = d3.scaleLinear()
+      .domain([0, d3.max(data, d => d[stat])])
+      .range([0, width]);
+  
+  // Update x-axis
+  svg.select(".x-axis")
+    .transition()
+    .duration(1000)
+    .call(d3.axisBottom(x)); // Make sure this selects and updates the x-axis correctly
 
-  // Transition to sort bars
+  // Transition bars
   svg.selectAll(".bar")
-      .transition()
-      .duration(1000)
-      .attr("y", d => y(d.player))
-      .attr("width", d => x(+d[stat])); // Update the width of bars based on new stat
+    .data(data)
+    .transition()
+    .duration(1000)
+    .attr("x", x(0))
+    .attr("y", d => y(d.player))
+    .attr("width", d => {
+        const widthValue = x(d[stat]);
+        if (isNaN(widthValue)) {
+            console.error(`Invalid width for player ${d.player} with stat ${stat}:`, d[stat]);
+        }
+        return widthValue;
+    }) // Make sure the width calculation is correct
+    .attr("height", y.bandwidth());
 }
 
-  
