@@ -41,15 +41,33 @@ d3.csv("top10.csv").then(function(data) {
   });
   
   
-  document.getElementById('sort').addEventListener('click', () => {
+// Existing D3 code to load data and create the initial bar chart
 
-    data.sort((a, b) => b.pts - a.pts);
-  
-    y.domain(data.map(d => d.player));
-  
-    svg.selectAll(".bar")
-        .transition()
-        .duration(1000)
-        .attr("y", d => y(d.player));
-  });
+document.getElementById('sort-points').addEventListener('click', () => {
+  sortAndUpdate("pts");
+});
+
+document.getElementById('sort-assists').addEventListener('click', () => {
+  sortAndUpdate("ast");
+});
+
+document.getElementById('sort-rebounds').addEventListener('click', () => {
+  sortAndUpdate("reb");
+});
+
+// Function to sort data and update the chart
+function sortAndUpdate(stat) {
+  data.sort((a, b) => +b[stat] - +a[stat]); // Sort data based on the stat (pts, ast, reb)
+
+  // Update the y-domain based on the new data order
+  y.domain(data.map(d => d.player));
+
+  // Transition to sort bars
+  svg.selectAll(".bar")
+      .transition()
+      .duration(1000)
+      .attr("y", d => y(d.player))
+      .attr("width", d => x(+d[stat])); // Update the width of bars based on new stat
+}
+
   

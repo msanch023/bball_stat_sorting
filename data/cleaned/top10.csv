@@ -1,11 +1,11 @@
-,season,player,pts
-3145,2020,James Harden,2335
-2988,2020,Damian Lillard,1978
-3028,2020,Devin Booker,1863
-3091,2020,Giannis Antetokounmpo,1857
-3466,2020,Trae Young,1778
-3288,2020,Luka Dončić,1759
-2929,2020,Bradley Beal,1741
-3281,2020,LeBron James,1698
-3041,2020,Donovan Mitchell,1655
-2907,2020,Anthony Davis,1618
+,season,player,pts,trb,ast
+3145,2020,James Harden,2335,446.0,512
+2988,2020,Damian Lillard,1978,284.0,530
+3028,2020,Devin Booker,1863,297.0,456
+3091,2020,Giannis Antetokounmpo,1857,856.0,354
+3466,2020,Trae Young,1778,255.0,560
+3288,2020,Luka Dončić,1759,573.0,538
+2929,2020,Bradley Beal,1741,242.0,347
+3281,2020,LeBron James,1698,525.0,684
+3041,2020,Donovan Mitchell,1655,304.0,294
+2907,2020,Anthony Davis,1618,577.0,200
