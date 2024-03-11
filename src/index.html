@@ -7,6 +7,12 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
+    <select id="sort-method">
+        <option value="selection">Selection Sort</option>
+        <option value="insertion">Insertion Sort</option>
+        <option value="merge">Merge Sort</option>
+      </select>
+      
     <div style="text-align:center;">
         <button id="sort-points">Sort by Points</button>
         <button id="sort-assists">Sort by Assists</button>
@@ -14,6 +20,8 @@
     </div>
 
     <div id="chart"></div>
+    <div id="chart2"></div>
+    <div id="chart3"></div>
     <script src="main.js"></script>
 </body>
 </html>

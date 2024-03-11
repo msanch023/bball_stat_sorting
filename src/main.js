@@ -41,8 +41,9 @@ let x3 = d3.scaleBand().range([0, width3]).padding(0.1);
 let y3 = d3.scaleLinear().range([height3, 0]);
 
 let data;
+let isSorting = false;
 
-d3.csv("top_100.csv").then(function(loadedData) {
+d3.csv("players2020.csv").then(function(loadedData) {
   data = loadedData;
   data.forEach(d => {
     d.pts = +d.pts;
@@ -93,10 +94,15 @@ document.getElementById('sort-rebounds').addEventListener('click', () => {
 });
 
 function sortAndUpdate(stat, sortMethod) {
-  y.domain([0, d3.max(data, d => d.stat) + 200]);
+  if (isSorting) {
+    console.log("Sort in progress. Please wait.");
+    return;
+  }
+  isSorting = true;
+  y.domain([0, d3.max(data, d => d[stat]) + 200]);
   switch (sortMethod) {
-    case "bubble":
-      bubbleSortAndUpdate(stat);
+    case "selection":
+      selectionSortAndUpdate(stat);
       break;
     case "insertion":
       insertionSortAndUpdate(stat);
@@ -110,22 +116,29 @@ function sortAndUpdate(stat, sortMethod) {
 }
 
 
-async function bubbleSortAndUpdate(stat) {
-  console.log(`Bubble sorting by ${stat}`);
+
+async function selectionSortAndUpdate(stat) {
+  console.log(`Selection sorting by ${stat}`);
 
   let n = data.length;
   for (let i = 0; i < n - 1; i++) {
-    for (let j = 0; j < n - i - 1; j++) {
-      if (data[j][stat] < data[j + 1][stat]) {
-        let temp = data[j];
-        data[j] = data[j + 1];
-        data[j + 1] = temp;
-        await delay(10);
-        updateChart(stat);
+    let minIndex = i;
+    for (let j = i + 1; j < n; j++) {
+      if (data[j][stat] > data[minIndex][stat]) {
+        minIndex = j;
       }
     }
+    if (minIndex != i) {
+      let temp = data[i];
+      data[i] = data[minIndex];
+      data[minIndex] = temp;
+      await delay(20);
+      updateChart(stat);
+    }
   }
+  isSorting = false;
 }
+
 
 async function insertionSortAndUpdate(stat) {
   console.log(`Insertion sorting by ${stat}`);
@@ -137,11 +150,12 @@ async function insertionSortAndUpdate(stat) {
     while (j >= 0 && data[j][stat] < key[stat]) {
       data[j + 1] = data[j];
       j = j - 1;
-      await delay(10);
+      await delay(0);
       updateChart(stat);
     }
     data[j + 1] = key;
   }
+  isSorting = false;
 }
 
 async function mergeSortAndUpdate(stat) {
@@ -202,6 +216,7 @@ async function merge(arr, stat, l, m, r) {
     await delay(10);
     updateChart(stat);
   }
+  isSorting = false;
 }
 
 function delay(ms) {
