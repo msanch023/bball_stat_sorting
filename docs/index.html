@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en"> 
 <head>
     <meta charset="UTF-8">
     <title>Basketball Players Career Points Visualization</title>
@@ -7,11 +7,21 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-    <div style="text-align:center;"> <!-- Center align the button for better aesthetics -->
-        <button id="sort">Sort by Points</button> <!-- Button above the chart -->
+    <select id="sort-method">
+        <option value="bubble">Bubble Sort</option>
+        <option value="insertion">Insertion Sort</option>
+        <option value="merge">Merge Sort</option>
+      </select>
+      
+    <div style="text-align:center;">
+        <button id="sort-points">Sort by Points</button>
+        <button id="sort-assists">Sort by Assists</button>
+        <button id="sort-rebounds">Sort by Rebounds</button>
     </div>
 
     <div id="chart"></div>
+    <div id="chart2"></div>
+    <div id="chart3"></div>
     <script src="main.js"></script>
 </body>
 </html>
