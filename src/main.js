@@ -13,7 +13,7 @@ let x = d3.scaleBand().range([0, width]).padding(0.1);
 let y = d3.scaleLinear().range([height, 0]);
 
 const margin2 = {top: 70, right: 30, bottom: 100, left: 90},
-   width2 = 800 - margin2.left - margin2.right,
+  width2 = 700 - margin2.left - margin2.right,
   height2 = 400 - margin2.top - margin2.bottom;
 
 const svg2 = d3.select("#chart2")
@@ -27,7 +27,7 @@ let x2 = d3.scaleBand().range([0, width2]).padding(0.1);
 let y2 = d3.scaleLinear().range([height2, 0]);
 
 const margin3 = {top: 70, right: 30, bottom: 100, left: 90},
-    width3 = 800 - margin3.left - margin3.right,
+    width3 = 700 - margin3.left - margin3.right,
     height3 = 400 - margin3.top - margin3.bottom;
 
 const svg3 = d3.select("#chart3")

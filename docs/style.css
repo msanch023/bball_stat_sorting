@@ -9,4 +9,6 @@
   .axis-label {
     font-size: 12px;
   }
-  
+  #chart {
+    transform: translate(20px, 30px); /* Moves right 20px and down 30px */
+  }

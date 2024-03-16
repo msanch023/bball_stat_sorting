@@ -9,4 +9,32 @@
   .axis-label {
     font-size: 12px;
   }
-  
+
+  .graph-container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.large-graph {
+    flex: 2;
+    margin-left: -50px;
+    position: fixed;
+    left: 0;
+    bottom: 30px;
+    width: 50%;
+    height: auto;
+}
+
+.small-graphs {
+  position: fixed;
+  right: 100px;
+  width: 45%;
+}
+
+.small-graph {
+  height: auto;
+}
+
+.small-graph:last-child {
+  margin-top: -80px;
+}
