@@ -16,6 +16,12 @@ let isPaused = false;
 
 let svg, svg2, svg3;
 let x, y, x2, y2, x3, y3;
+document.getElementById('start-visualization').addEventListener('click', () => {
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('charts-container').style.display = 'block';
+  document.getElementById('sort-info').style.display = 'block';
+  initializeChart(); 
+});
 
 function initializeChart() {
   d3.select("#chart").selectAll("*").remove();
@@ -93,6 +99,7 @@ function initializeChart() {
 }
 
 let lastUsedStat, lastUsedSortMethod;
+
 document.getElementById('start-sorting').addEventListener('click', () => {
   const sortMethod = document.getElementById('sort-method').value;
   const sortCategory = document.getElementById('sort-category').value;
@@ -128,21 +135,29 @@ function sortAndUpdate(stat, sortMethod) {
     return;
   }
   isSorting = true;
+
   y.domain([0, d3.max(data, d => d[stat]) + 200]);
   switch (sortMethod) {
     case "selection":
+      document.getElementById('sort-info').style.display = 'block';
+      document.getElementById('sort-info').innerHTML = 'The idea behind selection sort is that we select the the data point that is biggest, and then second biggest, third, so on and so forth. So player with the most points/assist/rebounds gets sorted immediately. You can see that by looking at the top 10 graph, unlike the other sorts, Selection Sorts immediately creates the correct top 10 graph.';
       selectionSortAndUpdate(stat);
       break;
     case "insertion":
+      document.getElementById('sort-info').style.display = 'block';
+      document.getElementById('sort-info').innerHTML = 'The idea behind insertion sort is that we sort  as we progress along the dataset. Theres a clear point in the graph that we can see that separates the sorted and unsorted data, and as we go along we can see our sorted section get larger.';
       insertionSortAndUpdate(stat);
       break;
     case "merge":
+      document.getElementById('sort-info').style.display = 'block';
+      document.getElementById('sort-info').innerHTML = 'The idea behind merge sort is that our program will divide the dataset into sections, sort that section, and then merge them together. As we can see in our main graph, little parts keep getting sorted and slowly they merge together to form a sorted graph.';
       mergeSortAndUpdate(stat);
       break;
     default:
       console.error(`Unknown sort method: ${sortMethod}`);
   }
 }
+
 
 async function selectionSortAndUpdate(stat) {
   console.log(`Selection sorting by ${stat}`);
@@ -204,7 +219,7 @@ async function insertionSortAndUpdate(stat) {
 
 async function mergeSortAndUpdate(stat) {
   console.log(`Merge sorting by ${stat}`);
-  isSorting = true; // Start sorting
+  isSorting = true;
   await mergeSort(data, stat);
   if (isSorting) updateChart(stat);
   isSorting = false;
@@ -328,7 +343,6 @@ function updateChart(stat) {
     .call(d3.axisLeft(y2))
     .attr("class", "y-axis2");
 
-  // Add a label for the second chart
   svg2.selectAll(".chart-title2").remove();
   svg2.append("text")
     .attr("class", "chart-title2")
@@ -351,7 +365,6 @@ function updateChart(stat) {
 
   bars2.exit().remove();
 
-  // Update the third bar chart with the bottom 10 entries
   const bottom10Data = data.slice(-10);
   x3.domain(bottom10Data.map(d => d.player));
   y3.domain([0, d3.max(bottom10Data, d => d[stat])]);
@@ -372,7 +385,6 @@ function updateChart(stat) {
       .call(d3.axisLeft(y3))
       .attr("class", "y-axis3");
 
-  // Add a label for the third chart
   svg3.selectAll(".chart-title3").data([0]).enter().append("text")
     .attr("class", "chart-title3")
     .attr("x", width3 / 2)
