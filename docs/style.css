@@ -75,3 +75,20 @@ button, select {
 select {
   cursor: pointer;
 }
+#intro {
+  text-align: center;
+  padding: 200px;
+}
+
+#intro h1 {
+  margin-bottom: 10px;
+}
+
+#intro p {
+  margin-bottom: 20px;
+}
+
+#sort-info {
+  width: 300px;
+  word-wrap: break-word;
+}
