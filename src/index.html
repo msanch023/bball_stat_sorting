@@ -7,17 +7,35 @@
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 <body>
-    <select id="sort-method">
-        <option value="selection">Selection Sort</option>
-        <option value="insertion">Insertion Sort</option>
-        <option value="merge">Merge Sort</option>
-      </select>
-      
-    <div style="text-align:center;">
-        <button id="sort-points">Sort by Points</button>
-        <button id="sort-assists">Sort by Assists</button>
-        <button id="sort-rebounds">Sort by Rebounds</button>
+    <div id="button-container" style="margin-bottom: 5px;">
+        <button id="start-sorting">Start Sorting</button>
+        <button id="reset-chart">Reset</button>
+        <button id="pause-play-btn">Pause</button>
+      </div>
+    
+
+    <div id="dropdown-container">
+        <select id="sort-method">
+          <option value="selection">Selection Sort</option>
+          <option value="insertion">Insertion Sort</option>
+          <option value="merge">Merge Sort</option>
+        </select>
+        <select id="sort-category">
+          <option value="pts">Points</option>
+          <option value="ast">Assists</option>
+          <option value="reb">Rebounds</option>
+        </select>
+      </div>
+      <div class="title-container">
+        <h2>Sorting Visualization</h2>
+        <p>By Marco Sanchez, Jevan Chahal, and Jason Kim</p>
     </div>
+    <div class="video-container">
+        <iframe width="400" height="200" src="https://www.youtube.com/embed/uIHkcbXYoWg?si=BnSuOKu8NRSbKWA2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    
+
 
     <div class="graph-container">
         <div id="chart" class="large-graph"></div>

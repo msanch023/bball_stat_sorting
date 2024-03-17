@@ -38,3 +38,40 @@
 .small-graph:last-child {
   margin-top: -80px;
 }
+
+.controls-container {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Adjust the gap between the elements as needed */
+}
+
+.buttons-container,
+.dropdowns-container {
+  display: flex;
+  flex-direction: column; /* Stack buttons and dropdowns vertically */
+  gap: 10px; /* Adjust the space between buttons/dropdowns */
+}
+
+.title-container h2 {
+  margin-top: -70px;
+  padding-left: 250px; /* Adjust as needed for spacing */
+  font-size: 36px; /* Adjust this value to make the title bigger */
+  font-weight: bold; /* Optional: makes the title bolder */
+}
+.title-container p {
+  margin-top: -20px;
+  padding-left: 250px; /* Aligns text with the title */
+  font-size: 16px; /* Adjust as needed */
+  color: #666; /* Optional: changes the text color */
+}
+
+/* Additional styles for visual improvement */
+button, select {
+  padding: 5px 10px;
+  margin: 0; /* Removes default margin */
+  cursor: pointer;
+}
+
+select {
+  cursor: pointer;
+}

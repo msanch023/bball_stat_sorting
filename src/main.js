@@ -1,97 +1,146 @@
 const margin = {top: 20, right: 30, bottom: 40, left: 90},
-    width = 800 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+width = 800 - margin.left - margin.right,
+height = 400 - margin.top - margin.bottom;
 
-const svg = d3.select("#chart")
+
+
+
+const margin2 = {top: 70, right: 30, bottom: 100, left: 90},
+  width2 = 700 - margin2.left - margin2.right,
+  height2 = 400 - margin2.top - margin2.bottom;
+
+
+
+
+const margin3 = {top: 70, right: 30, bottom: 100, left: 90},
+    width3 = 700 - margin3.left - margin3.right,
+    height3 = 400 - margin3.top - margin3.bottom;
+
+
+
+
+let data;
+let isSorting = false;
+let isPaused = false;
+
+let svg, svg2, svg3;
+let x, y, x2, y2, x3, y3;
+
+function initializeChart() {
+  d3.select("#chart").selectAll("*").remove();
+  d3.select("#chart2").selectAll("*").remove();
+  d3.select("#chart3").selectAll("*").remove();
+
+
+
+  svg = d3.select("#chart")
   .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
   .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-let x = d3.scaleBand().range([0, width]).padding(0.1);
-let y = d3.scaleLinear().range([height, 0]);
+  x = d3.scaleBand().range([0, width]).padding(0.1);
+  y = d3.scaleLinear().range([height, 0]);
 
-const margin2 = {top: 70, right: 30, bottom: 100, left: 90},
-  width2 = 700 - margin2.left - margin2.right,
-  height2 = 400 - margin2.top - margin2.bottom;
 
-const svg2 = d3.select("#chart2")
+
+  svg2 = d3.select("#chart2")
   .append("svg")
     .attr("width", width2 + margin2.left + margin2.right)
     .attr("height", height2 + margin2.top + margin2.bottom)
   .append("g")
     .attr("transform", `translate(${margin2.left},${margin2.top})`);
+  
+  x2 = d3.scaleBand().range([0, width2]).padding(0.1);
+  y2 = d3.scaleLinear().range([height2, 0]);
+    
 
-let x2 = d3.scaleBand().range([0, width2]).padding(0.1);
-let y2 = d3.scaleLinear().range([height2, 0]);
 
-const margin3 = {top: 70, right: 30, bottom: 100, left: 90},
-    width3 = 700 - margin3.left - margin3.right,
-    height3 = 400 - margin3.top - margin3.bottom;
 
-const svg3 = d3.select("#chart3")
+
+
+  svg3 = d3.select("#chart3")
   .append("svg")
     .attr("width", width3 + margin3.left + margin3.right)
     .attr("height", height3 + margin3.top + margin3.bottom)
   .append("g")
     .attr("transform", `translate(${margin3.left},${margin3.top})`);
 
-let x3 = d3.scaleBand().range([0, width3]).padding(0.1);
-let y3 = d3.scaleLinear().range([height3, 0]);
+  x3 = d3.scaleBand().range([0, width3]).padding(0.1);
+  y3 = d3.scaleLinear().range([height3, 0]);
 
-let data;
-let isSorting = false;
 
-d3.csv("players2020.csv").then(function(loadedData) {
-  data = loadedData;
-  data.forEach(d => {
-    d.pts = +d.pts;
-    d.ast = +d.ast;
-    d.reb = +d.reb; 
+  
+  d3.csv("players2020.csv").then(function(loadedData) {
+    data = loadedData;
+    data.forEach(d => {
+      d.pts = +d.pts;
+      d.ast = +d.ast;
+      d.reb = +d.reb; 
+    });
+
+    // Your existing code for setting up the scales and drawing the chart goes here
+    // Make sure to include everything inside the d3.csv.then block up to before the event listeners
+    x.domain(data.map(d => d.player));
+    y.domain([0, d3.max(data, d => d.pts) + 200]);
+  
+    svg.append("g")
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(x))
+      .attr("class", "x-axis")
+      .selectAll("text")
+      .style("display", "none"); // Hide the x-axis labels
+  
+    svg.append("g")
+      .call(d3.axisLeft(y))
+      .attr("class", "y-axis") // Assign a class to the y-axis for easy selection
+      .selectAll("text")
+      .style("display", "none"); // Hide the y-axis labels
+  
+    svg.selectAll(".bar")
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", d => x(d.player))
+      .attr("y", d => y(d.pts))
+      .attr("width", x.bandwidth())
+      .attr("height", d => height - y(d.pts))
+      .attr("class", "bar");
   });
-
-  x.domain(data.map(d => d.player));
-  y.domain([0, d3.max(data, d => d.pts) + 200]);
-
-  svg.append("g")
-    .attr("transform", `translate(0,${height})`)
-    .call(d3.axisBottom(x))
-    .attr("class", "x-axis")
-    .selectAll("text")
-    .style("display", "none"); // Hide the x-axis labels
-
-  svg.append("g")
-    .call(d3.axisLeft(y))
-    .attr("class", "y-axis") // Assign a class to the y-axis for easy selection
-    .selectAll("text")
-    .style("display", "none"); // Hide the y-axis labels
-
-  svg.selectAll(".bar")
-    .data(data)
-    .enter()
-    .append("rect")
-    .attr("x", d => x(d.player))
-    .attr("y", d => y(d.pts))
-    .attr("width", x.bandwidth())
-    .attr("height", d => height - y(d.pts))
-    .attr("class", "bar");
-});
-
-document.getElementById('sort-points').addEventListener('click', () => {
+}
+let lastUsedStat, lastUsedSortMethod;
+document.getElementById('start-sorting').addEventListener('click', () => {
   const sortMethod = document.getElementById('sort-method').value;
-  sortAndUpdate("pts", sortMethod);
+  const sortCategory = document.getElementById('sort-category').value;
+
+  lastUsedStat = sortCategory;
+  lastUsedSortMethod = sortMethod;
+
+
+  if (!isSorting || isPaused) {
+        isPaused = false; // Ensure sorting is not paused
+        document.getElementById('pause-play-btn').textContent = "Pause"; // Reset button text
+        sortAndUpdate(sortCategory, sortMethod);
+    }
 });
 
-document.getElementById('sort-assists').addEventListener('click', () => {
-  const sortMethod = document.getElementById('sort-method').value;
-  sortAndUpdate("ast", sortMethod);
+document.getElementById('reset-chart').addEventListener('click', () => {
+  isSorting = false;
+  isPaused = false;
+  initializeChart(); // Assumes this function resets the chart to its initial state
+  document.getElementById('pause-play-btn').textContent = "Pause"; // Reset button text
 });
 
-document.getElementById('sort-rebounds').addEventListener('click', () => {
-  const sortMethod = document.getElementById('sort-method').value;
-  sortAndUpdate("reb", sortMethod);
+document.getElementById('pause-play-btn').addEventListener('click', () => {
+  isPaused = !isPaused; // Toggle pause state
+  document.getElementById('pause-play-btn').textContent = isPaused ? "Play" : "Pause";
 });
+
+initializeChart();
+
+
+
 
 function sortAndUpdate(stat, sortMethod) {
   if (isSorting) {
@@ -122,8 +171,15 @@ async function selectionSortAndUpdate(stat) {
 
   let n = data.length;
   for (let i = 0; i < n - 1; i++) {
+    // Check if sorting should continue
+    if (!isSorting) return;
+
+    // Pause logic: wait here if paused
+    while (isPaused) await delay(100); // Adjust the delay time as needed
+
     let minIndex = i;
     for (let j = i + 1; j < n; j++) {
+      // Optional: You could also check isPaused inside this inner loop if needed
       if (data[j][stat] > data[minIndex][stat]) {
         minIndex = j;
       }
@@ -132,12 +188,16 @@ async function selectionSortAndUpdate(stat) {
       let temp = data[i];
       data[i] = data[minIndex];
       data[minIndex] = temp;
-      await delay(20);
+      
+      await delay(20); // This delay is for the sorting animation/visualization
+      if (!isSorting) return; // Check again before updating the chart
+      
       updateChart(stat);
     }
   }
-  isSorting = false;
+  isSorting = false; // Mark sorting as finished
 }
+
 
 
 async function insertionSortAndUpdate(stat) {
@@ -145,23 +205,38 @@ async function insertionSortAndUpdate(stat) {
 
   let n = data.length;
   for (let i = 1; i < n; i++) {
+    // Pause logic: wait here if paused
+    while (isPaused) await delay(100); // Wait while the sorting is paused
+
+    if (!isSorting) return; // Check if the sorting should continue
+
     let key = data[i];
     let j = i - 1;
+    
     while (j >= 0 && data[j][stat] < key[stat]) {
       data[j + 1] = data[j];
       j = j - 1;
-      await delay(0);
+
+      // Insert the pause check inside the inner loop as well, 
+      // to allow for pausing in the middle of the insertion sort's shifting process.
+      while (isPaused) await delay(100); // Wait while the sorting is paused
+      if (!isSorting) return; // Check again if sorting should continue
+
+      await delay(0); // This delay is for visualization purposes
       updateChart(stat);
     }
     data[j + 1] = key;
   }
-  isSorting = false;
+  isSorting = false; // Mark sorting as finished
 }
+
 
 async function mergeSortAndUpdate(stat) {
   console.log(`Merge sorting by ${stat}`);
+  isSorting = true; // Start sorting
   await mergeSort(data, stat);
-  updateChart(stat);
+  if (isSorting) updateChart(stat); // Update chart if sorting wasn't stopped
+  isSorting = false; // Mark sorting as finished
 }
 
 async function mergeSort(arr, stat, l = 0, r = arr.length - 1) {
@@ -171,6 +246,9 @@ async function mergeSort(arr, stat, l = 0, r = arr.length - 1) {
   const m = l + Math.floor((r - l) / 2);
   await mergeSort(arr, stat, l, m);
   await mergeSort(arr, stat, m + 1, r);
+  while (isPaused) await delay(100); // Pause sorting
+  if (!isSorting) return; // Check if sorting should continue
+
   await merge(arr, stat, l, m, r);
 }
 
@@ -189,6 +267,12 @@ async function merge(arr, stat, l, m, r) {
 
   let i = 0, j = 0, k = l;
   while (i < n1 && j < n2) {
+    // Check if the sorting process should continue
+    if (!isSorting) return;
+
+    // Pause logic: wait here if paused
+    while (isPaused) await delay(100);
+
     if (L[i][stat] >= R[j][stat]) {
       arr[k] = L[i];
       i++;
@@ -197,27 +281,42 @@ async function merge(arr, stat, l, m, r) {
       j++;
     }
     k++;
-    await delay(10);
+    await delay(10); // This delay is for visualization purposes
     updateChart(stat);
   }
 
   while (i < n1) {
+    // Check if the sorting process should continue
+    if (!isSorting) return;
+
+    // Pause logic: wait here if paused
+    while (isPaused) await delay(100);
+
     arr[k] = L[i];
     i++;
     k++;
-    await delay(10);
+    await delay(10); // This delay is for visualization purposes
     updateChart(stat);
   }
 
   while (j < n2) {
+    // Check if the sorting process should continue
+    if (!isSorting) return;
+
+    // Pause logic: wait here if paused
+    while (isPaused) await delay(100);
+
     arr[k] = R[j];
     j++;
     k++;
-    await delay(10);
+    await delay(10); // This delay is for visualization purposes
     updateChart(stat);
   }
-  isSorting = false;
+
+  // At the end of the merge function, do not set isSorting to false
+  // This flag should only be set to false once the entire sorting process is completed
 }
+
 
 function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
@@ -333,3 +432,4 @@ function updateChart(stat) {
 
   bars3.exit().remove();
 }
+
